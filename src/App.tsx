@@ -98,34 +98,6 @@ function App() {
           </Grid>
         </Box>
 
-        {/* Implementation Instructions */}
-        <Paper sx={{ p: 3, mb: 3, backgroundColor: '#f5f5f5' }}>
-          <Typography variant="h6" gutterBottom>
-            Your Implementation Starts Here
-          </Typography>
-          <Typography paragraph>
-            The starter kit is configured with:
-          </Typography>
-          <Box component="ul" sx={{ mt: 1 }}>
-            <Typography component="li">
-              20 mock loan applications loaded via the custom hook
-            </Typography>
-            <Typography component="li">
-              Role-based data access (try switching roles)
-            </Typography>
-            <Typography component="li">
-              Utility functions for risk calculation and formatting
-            </Typography>
-            <Typography component="li">
-              TypeScript types for all data structures
-            </Typography>
-          </Box>
-          <Typography sx={{ mt: 2 }}>
-            <strong>Next Steps:</strong> Implement the application table below with sorting, 
-            filtering, and detail modal as specified in the requirements.
-          </Typography>
-        </Paper>
-
         {/* Placeholder for Implementation */}
         <Paper sx={{ p: 3, minHeight: 400, backgroundColor: '#fafafa' }}>
           <Typography variant="h6" gutterBottom>
