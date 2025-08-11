@@ -6,17 +6,19 @@ import {
   Box, 
   Alert, 
   Paper,
-  Grid 
+  Grid,
+  Skeleton 
 } from '@mui/material'
 import { RoleSwitcher } from './components/RoleSwitcher'
 import { LoanSummaryCard } from './components/LoanSummaryCard'
 import { useAuth } from './contexts/AuthContext'
 import { useLoanApplications } from './hooks/useLoanApplications'
 import { formatCurrency } from './utils/formatting'
+import DataTable from './components/DataTable';
 
 function App() {
   const { currentUser } = useAuth()
-  const { applications } = useLoanApplications()
+  const { applications, loading } = useLoanApplications() // Make sure your hook returns loading
 
   // Calculate summary statistics
   const totalApplications = applications.length
@@ -27,6 +29,8 @@ function App() {
            new Date(app.submittedAt).toDateString() === today
   }).length
   const totalValue = applications.reduce((sum, app) => sum + app.amount, 0)
+
+  console.log('Applications:', applications);
 
   return (
     <Container maxWidth="xl">
@@ -127,31 +131,23 @@ function App() {
           <Typography variant="h6" gutterBottom>
             Application Table
           </Typography>
-          <Typography color="text.secondary">
-            TODO: Implement your loan application table here
-          </Typography>
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              Requirements:
-            </Typography>
-            <Box component="ul" sx={{ mt: 1 }}>
-              <Typography variant="body2" component="li" color="text.secondary">
-                Display applications in a sortable table
-              </Typography>
-              <Typography variant="body2" component="li" color="text.secondary">
-                Add status filter dropdown
-              </Typography>
-              <Typography variant="body2" component="li" color="text.secondary">
-                Implement search by applicant name
-              </Typography>
-              <Typography variant="body2" component="li" color="text.secondary">
-                Show risk scores with color coding
-              </Typography>
-              <Typography variant="body2" component="li" color="text.secondary">
-                Create detail modal on row click
-              </Typography>
+          {/* Show skeleton while loading, else DataTable */}
+          {loading ? (
+            <Box>
+              {[...Array(8)].map((_, i) => (
+                <Skeleton key={i} variant="rectangular" height={48} sx={{ mb: 1 }} />
+              ))}
             </Box>
-          </Box>
+          ) : (
+            <DataTable columns={[
+              { label: 'Applicant Name', key: 'applicantName' },
+              { label: 'Loan Amount', key: 'amount' },
+              { label: 'Risk Score', key: 'riskScore' },
+              { label: 'Status', key: 'status' },
+              { label: 'Submitted At', key: 'submittedAt' },
+              { label: 'Actions', key: 'actions' }
+            ]} rows={applications} />
+          )}
         </Paper>
       </Box>
     </Container>
