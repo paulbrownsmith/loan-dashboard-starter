@@ -146,7 +146,7 @@ function App() {
               { label: 'Status', key: 'status' },
               { label: 'Submitted At', key: 'submittedAt' },
               { label: 'Actions', key: 'actions' }
-            ]} rows={applications} />
+            ]} rows={applications} currentUserRole={currentUser.role} />
           )}
         </Paper>
       </Box>

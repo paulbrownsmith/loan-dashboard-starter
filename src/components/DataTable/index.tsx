@@ -1,14 +1,16 @@
 import React from 'react'
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableSortLabel,
-  Box, FormControl, InputLabel, Select, MenuItem, TextField, Button
+  Box, FormControl, InputLabel, Select, MenuItem, TextField, Button, Chip, Typography
 } from '@mui/material'
 import type { SelectChangeEvent } from '@mui/material/Select';
 import ApplicationDetailDialog from '../ApplicationDetailDialog'
+import { UserRole } from '../../types'
 
 interface DataTableProps {
   columns: { label: string; key: string }[]
   rows: Record<string, any>[]
+  currentUserRole: UserRole
 }
 
 type Order = 'asc' | 'desc'
@@ -40,7 +42,34 @@ function calculateMonthlyPayment(amount: number, termMonths: number, annualRate 
   ).toFixed(2)
 }
 
-const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
+const getStatusChipColour = (status: string) => {
+  switch (status) {
+    case 'APPROVED':
+      return 'success'
+    case 'PENDING':
+      return 'info'
+    case 'REJECTED':
+      return 'error'
+    case 'UNDER_REVIEW':
+      return 'warning'
+    default:
+      return 'default'
+  }
+}
+
+function getRiskColor(score: number) {
+  if (score <= 3) return 'success.main'   // Green
+  if (score <= 7) return 'warning.main'   // Amber
+  return 'error.main'                     // Red
+}
+
+function getRiskLabel(score: number) {
+  if (score <= 3) return 'LOW'
+  if (score <= 7) return 'MEDIUM'
+  return 'HIGH'
+}
+
+const DataTable: React.FC<DataTableProps> = ({ columns, rows, currentUserRole }) => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<string>('')
   const [statusFilter, setStatusFilter] = React.useState<string>('ALL')
@@ -106,32 +135,32 @@ const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
         <FormControl size="small" sx={{ minWidth: 200 }}>
           <InputLabel>Filter by Status</InputLabel>
           <Select
-            label="Filter by Status"
-            value={statusFilter}
-            onChange={handleStatusChange}
+        label="Filter by Status"
+        value={statusFilter}
+        onChange={handleStatusChange as (event: SelectChangeEvent<string>) => void}
           >
-            {statusOptions.map(opt => (
-              <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
-            ))}
+        {statusOptions.map((opt: { label: string; value: string }) => (
+          <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+        ))}
           </Select>
         </FormControl>
         <TextField
           size="small"
           label="Search by Applicant Name"
           value={search}
-          onChange={handleSearchChange}
+          onChange={handleSearchChange as React.ChangeEventHandler<HTMLInputElement>}
           sx={{ minWidth: 250 }}
         />
         <FormControl size="small" sx={{ minWidth: 120 }}>
           <InputLabel>Rows</InputLabel>
           <Select
-            label="Rows"
-            value={rowsPerPage}
-            onChange={handleRowsPerPageChange}
+        label="Rows"
+        value={rowsPerPage}
+        onChange={handleRowsPerPageChange as (event: SelectChangeEvent<number>) => void}
           >
-            {[5, 10, 20].map(num => (
-              <MenuItem key={num} value={num}>{num} rows</MenuItem>
-            ))}
+        {[5, 10, 20].map((num: number) => (
+          <MenuItem key={num} value={num}>{num} rows</MenuItem>
+        ))}
           </Select>
         </FormControl>
       </Box>
@@ -154,7 +183,7 @@ const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
                   )}
                 </TableCell>
               ))}
-              <TableCell>Actions</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -168,7 +197,32 @@ const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
               pagedRows.map((row, idx) => (
                 <TableRow key={idx}>
                   {columns.map(col => (
-                    <TableCell key={col.key}>{row[col.key]}</TableCell>
+                    <TableCell key={col.key}>
+                      {col.key === 'status' ? (
+                        <Chip
+                          label={row.status}
+                          color={getStatusChipColour(row.status)}
+                          size="small"
+                          sx={{ fontWeight: 600 }}
+                          variant="outlined"
+                        />
+                      ) : col.key === 'riskScore' ? (
+                        <Typography variant="body2" gutterBottom>
+                          <Box
+                            component="span"
+                            sx={{
+                              color: getRiskColor(row.riskScore),
+                              fontWeight: 700,
+                              ml: 1,
+                            }}
+                          >
+                            {row.riskScore} ({getRiskLabel(row.riskScore)})
+                          </Box>
+                        </Typography>
+                      ) : (
+                        row[col.key]
+                      )}
+                    </TableCell>
                   ))}
                   <TableCell>
                     <Button size="small" onClick={() => handleViewDetails(row)}>
@@ -182,12 +236,12 @@ const DataTable: React.FC<DataTableProps> = ({ columns, rows }) => {
         </Table>
       </TableContainer>
 
-      {/* Use the extracted dialog */}
       <ApplicationDetailDialog
         open={modalOpen}
         onClose={handleCloseModal}
         application={selected}
         calculateMonthlyPayment={calculateMonthlyPayment}
+        currentUserRole={currentUserRole}
       />
     </Box>
   )
