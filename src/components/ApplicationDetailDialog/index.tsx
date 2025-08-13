@@ -54,6 +54,19 @@ const ApplicationDetailDialog: React.FC<ApplicationDetailDialogProps> = ({
     ? application.bankDetails?.value
     : application.bankDetails?.masked
 
+  const infoFields = [
+    { label: 'Name', value: application.applicantName },
+    { label: 'Email', value: application.email },
+    { label: 'Phone', value: application.phone },
+    { label: 'Loan Amount', value: `£${application.amount?.toLocaleString('en-GB')}` },
+    { label: 'Purpose', value: application.purpose },
+    { label: 'Term Length', value: `${application.termMonths} months` },
+    { label: 'Monthly Payment', value: `£${calculateMonthlyPayment(application.amount, application.termMonths)}` },
+    { label: 'National Insurance Number', value: niNumber },
+    { label: 'Date of Birth', value: dob },
+    { label: 'Bank Account Details', value: bankAccount },
+  ]
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Applicant Details</DialogTitle>
@@ -70,36 +83,12 @@ const ApplicationDetailDialog: React.FC<ApplicationDetailDialogProps> = ({
       <DialogContent dividers>
         {tab === 0 && (
           <Box>
-            <Typography variant="body2" gutterBottom sx={{ fontWeight: 700 }}>
-              Name: <Box component="span" sx={{ fontWeight: 400 }}>{application.applicantName}</Box>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Email:</Box> {application.email}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Phone:</Box> {application.phone}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Loan Amount:</Box> £{application.amount?.toLocaleString('en-GB')}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Purpose:</Box> {application.purpose}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Term Length:</Box> {application.termMonths} months
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Monthly Payment:</Box> £{calculateMonthlyPayment(application.amount, application.termMonths)}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>National Insurance Number:</Box> {niNumber}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Date of Birth:</Box> {dob}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Bank Account Details:</Box> {bankAccount}
-            </Typography>
+            {infoFields.map(field => (
+              <Typography variant="body2" gutterBottom sx={{ fontWeight: 700 }} key={field.label}>
+                <Box component="span" sx={{ fontWeight: 700 }}>{field.label}:</Box>{' '}
+                <Box component="span" sx={{ fontWeight: 400 }}>{field.value}</Box>
+              </Typography>
+            ))}
           </Box>
         )}
         {tab === 1 && (
