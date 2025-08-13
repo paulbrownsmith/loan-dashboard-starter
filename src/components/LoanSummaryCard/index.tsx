@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, Skeleton } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import { useLoanApplications } from '../../hooks/useLoanApplications';
 
 interface LoanSummaryCardProps {
   title: string;
@@ -22,6 +23,7 @@ export const LoanSummaryCard: React.FC<LoanSummaryCardProps> = ({
   trend,
   color = 'primary',
 }) => {
+  const { loading } = useLoanApplications();
   return (
     <Card sx={{ height: '100%' }}>
       <CardContent>
@@ -30,10 +32,13 @@ export const LoanSummaryCard: React.FC<LoanSummaryCardProps> = ({
         </Typography>
         
         <Box display="flex" alignItems="center" gap={1}>
-          <Typography variant="h4" component="div" color={`${color}.main`}>
-            {value}
-          </Typography>
-          
+          {loading ? (
+            <Skeleton variant="rectangular" sx={{ mb: 1, width: '100%', height: '2rem' }} />
+          ) : (
+            <Typography variant="h4" component="div" color={`${color}.main`}>
+              {value}
+            </Typography>
+          )}
           {trend && (
             <>
               {trend === 'up' && <TrendingUpIcon color="success" />}

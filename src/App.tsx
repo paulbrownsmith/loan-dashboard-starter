@@ -5,18 +5,15 @@ import {
   Typography, 
   Box, 
   Alert, 
-  Paper,
-  Grid,
-  Skeleton 
+  Paper
 } from '@mui/material'
-import { DataTable, LoanSummaryCard, RoleSwitcher } from './components'
+import { ApplicationsDataTable, RoleSwitcher, SummaryCards } from './components'
 import { useAuth } from './contexts/AuthContext'
 import { useLoanApplications } from './hooks/useLoanApplications'
-import { formatCurrency } from './utils/formatting'
 
 function App() {
   const { currentUser } = useAuth()
-  const { applications, loading } = useLoanApplications() // Make sure your hook returns loading
+  const { applications } = useLoanApplications() // Make sure your hook returns loading
 
   // Calculate summary statistics
   const totalApplications = applications.length
@@ -55,69 +52,29 @@ function App() {
             ' - Full access to all data'}
         </Alert>
 
-        {/* Example Summary Cards - Shows component usage pattern */}
-        <Box mb={3}>
-          <Typography variant="h6" gutterBottom>
-            Summary Statistics (Example)
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={3}>
-              <LoanSummaryCard
-                title="Total Applications"
-                value={totalApplications}
-                subtitle="All time"
-                color="primary"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <LoanSummaryCard
-                title="Pending Review"
-                value={pendingCount}
-                subtitle="Requires action"
-                color="warning"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <LoanSummaryCard
-                title="Approved Today"
-                value={approvedToday}
-                subtitle="Processed today"
-                color="success"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <LoanSummaryCard
-                title="Total Value"
-                value={formatCurrency(totalValue)}
-                subtitle="All applications"
-                color="secondary"
-              />
-            </Grid>
-          </Grid>
-        </Box>
-
-        {/* Placeholder for Implementation */}
+        {/* Summary Cards Component */}
+        <Paper sx={{ p: 3, backgroundColor: '#fafafa', marginBottom: '2rem' }}>
+          <SummaryCards
+            totalApplications={totalApplications}
+            pendingCount={pendingCount}
+            approvedToday={approvedToday}
+            totalValue={totalValue}
+          />
+        </Paper>
+        
+        {/* Applications table */}
         <Paper sx={{ p: 3, minHeight: 400, backgroundColor: '#fafafa' }}>
-          <Typography variant="h6" gutterBottom>
-            Application Table
+          <Typography variant="h6" gutterBottom sx={{ marginBottom: '2rem'}}>
+            Customer Applications
           </Typography>
-          {/* Show skeleton while loading, else DataTable */}
-          {loading ? (
-            <Box>
-              {[...Array(8)].map((_, i) => (
-                <Skeleton key={i} variant="rectangular" height={48} sx={{ mb: 1 }} />
-              ))}
-            </Box>
-          ) : (
-            <DataTable columns={[
-              { label: 'Applicant Name', key: 'applicantName' },
-              { label: 'Loan Amount', key: 'amount' },
-              { label: 'Risk Score', key: 'riskScore' },
-              { label: 'Status', key: 'status' },
-              { label: 'Submitted At', key: 'submittedAt' },
-              { label: 'Actions', key: 'actions' }
-            ]} rows={applications} currentUserRole={currentUser.role} />
-          )}
+          <ApplicationsDataTable columns={[
+            { label: 'Applicant Name', key: 'applicantName' },
+            { label: 'Loan Amount', key: 'amount' },
+            { label: 'Risk Score', key: 'riskScore' },
+            { label: 'Status', key: 'status' },
+            { label: 'Submitted At', key: 'submittedAt' },
+            { label: 'Actions', key: 'actions' }
+          ]} currentUserRole={currentUser.role} />          
         </Paper>
       </Box>
     </Container>

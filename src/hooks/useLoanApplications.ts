@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { ApplicationFilters, LoanApplication } from '../types'
 import { mockApplications } from '../mocks/mockData'
 

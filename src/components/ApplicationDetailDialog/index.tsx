@@ -11,7 +11,7 @@ import {
   Tab
 } from '@mui/material'
 
-interface ApplicationDetailDialogProps {
+interface ApplicationsDetailDialogProps {
   open: boolean
   onClose: () => void
   application: any | null
@@ -25,7 +25,7 @@ function getRiskColor(score: number) {
   return 'error.main'
 }
 
-export const ApplicationDetailDialog: React.FC<ApplicationDetailDialogProps> = ({
+export const ApplicationDetailDialog: React.FC<ApplicationsDetailDialogProps> = ({
   open,
   onClose,
   application,

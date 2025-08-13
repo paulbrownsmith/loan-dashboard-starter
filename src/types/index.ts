@@ -15,6 +15,7 @@ export interface LoanApplication {
   purpose: string
   termMonths: number
   employmentStatus: EmploymentStatus
+  [key: string]: unknown; // has a type, but we may not know it at compile time
 }
 
 export interface SensitiveField {

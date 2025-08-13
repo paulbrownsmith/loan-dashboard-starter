@@ -4,12 +4,12 @@ import {
   Box, FormControl, InputLabel, Select, MenuItem, TextField, Button, Chip, Typography
 } from '@mui/material'
 import type { SelectChangeEvent } from '@mui/material/Select';
+import { useLoanApplications } from '../../hooks/useLoanApplications'
 import { ApplicationDetailDialog } from '../../components';
 import { UserRole } from '../../types'
 
 interface DataTableProps {
   columns: { label: string; key: string }[]
-  rows: Record<string, any>[]
   currentUserRole: UserRole
 }
 
@@ -69,7 +69,7 @@ function getRiskLabel(score: number) {
   return 'HIGH'
 }
 
-export const DataTable: React.FC<DataTableProps> = ({ columns, rows, currentUserRole }) => {
+export const DataTable: React.FC<DataTableProps> = ({ columns, currentUserRole }) => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<string>('')
   const [statusFilter, setStatusFilter] = React.useState<string>('ALL')
@@ -77,6 +77,7 @@ export const DataTable: React.FC<DataTableProps> = ({ columns, rows, currentUser
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(10)
   const [selected, setSelected] = React.useState<any | null>(null)
   const [modalOpen, setModalOpen] = React.useState(false)
+  const { applications: rows } = useLoanApplications()
 
   const handleSort = (key: string) => {
     if (orderBy === key) {
@@ -220,7 +221,7 @@ export const DataTable: React.FC<DataTableProps> = ({ columns, rows, currentUser
                           </Box>
                         </Typography>
                       ) : (
-                        row[col.key]
+                        String(row[col.key as keyof typeof row] ?? '')
                       )}
                     </TableCell>
                   ))}
