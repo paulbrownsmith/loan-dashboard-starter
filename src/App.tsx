@@ -9,12 +9,10 @@ import {
   Grid,
   Skeleton 
 } from '@mui/material'
-import { RoleSwitcher } from './components/RoleSwitcher'
-import { LoanSummaryCard } from './components/LoanSummaryCard'
+import { DataTable, LoanSummaryCard, RoleSwitcher } from './components'
 import { useAuth } from './contexts/AuthContext'
 import { useLoanApplications } from './hooks/useLoanApplications'
 import { formatCurrency } from './utils/formatting'
-import DataTable from './components/DataTable';
 
 function App() {
   const { currentUser } = useAuth()

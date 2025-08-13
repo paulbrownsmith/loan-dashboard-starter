@@ -42,7 +42,7 @@ export function useLoanApplications(initialFilters?: ApplicationFilters) {
       } finally {
         setLoading(false)
       }
-    }, 600) // Simulate network delay
+    }, 1200) // Simulate network delay
 
     return () => clearTimeout(timeout)
   }, [filters])

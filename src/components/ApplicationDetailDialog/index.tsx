@@ -25,7 +25,7 @@ function getRiskColor(score: number) {
   return 'error.main'
 }
 
-const ApplicationDetailDialog: React.FC<ApplicationDetailDialogProps> = ({
+export const ApplicationDetailDialog: React.FC<ApplicationDetailDialogProps> = ({
   open,
   onClose,
   application,
@@ -138,5 +138,3 @@ const ApplicationDetailDialog: React.FC<ApplicationDetailDialogProps> = ({
     </Dialog>
   )
 }
-
-export default ApplicationDetailDialog

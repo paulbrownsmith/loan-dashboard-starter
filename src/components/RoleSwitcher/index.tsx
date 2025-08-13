@@ -1,6 +1,6 @@
 import React from 'react'
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthContext'
 
 export const RoleSwitcher: React.FC = () => {
   const { currentUser, switchRole } = useAuth()

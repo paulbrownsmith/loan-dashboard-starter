@@ -4,7 +4,7 @@ import {
   Box, FormControl, InputLabel, Select, MenuItem, TextField, Button, Chip, Typography
 } from '@mui/material'
 import type { SelectChangeEvent } from '@mui/material/Select';
-import ApplicationDetailDialog from '../ApplicationDetailDialog'
+import { ApplicationDetailDialog } from '../../components';
 import { UserRole } from '../../types'
 
 interface DataTableProps {
@@ -69,7 +69,7 @@ function getRiskLabel(score: number) {
   return 'HIGH'
 }
 
-const DataTable: React.FC<DataTableProps> = ({ columns, rows, currentUserRole }) => {
+export const DataTable: React.FC<DataTableProps> = ({ columns, rows, currentUserRole }) => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<string>('')
   const [statusFilter, setStatusFilter] = React.useState<string>('ALL')
@@ -246,5 +246,3 @@ const DataTable: React.FC<DataTableProps> = ({ columns, rows, currentUserRole })
     </Box>
   )
 }
-
-export default DataTable
