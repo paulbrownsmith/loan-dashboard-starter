@@ -3,6 +3,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableSortLabel,
   Box, FormControl, InputLabel, Select, MenuItem, TextField, Button, Chip, Typography
 } from '@mui/material'
+import { useSearchParams } from 'react-router-dom'
 import type { SelectChangeEvent } from '@mui/material/Select';
 import { useLoanApplications } from '../../hooks/useLoanApplications'
 import { ApplicationDetailDialog } from '../../components';
@@ -70,14 +71,36 @@ function getRiskLabel(score: number) {
 }
 
 export const DataTable: React.FC<DataTableProps> = ({ columns, currentUserRole }) => {
-  const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<string>('')
-  const [statusFilter, setStatusFilter] = React.useState<string>('ALL')
-  const [search, setSearch] = React.useState<string>('')
-  const [rowsPerPage, setRowsPerPage] = React.useState<number>(10)
   const [selected, setSelected] = React.useState<any | null>(null)
   const [modalOpen, setModalOpen] = React.useState(false)
   const { applications: rows } = useLoanApplications()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [order, setOrder] = React.useState<Order>(
+  (searchParams.get('order') as Order) || 'asc'
+  )
+  const [orderBy, setOrderBy] = React.useState<string>(
+    searchParams.get('orderBy') || ''
+  )
+  const [statusFilter, setStatusFilter] = React.useState<string>(
+    searchParams.get('status') || 'ALL'
+  )
+  const [search, setSearch] = React.useState<string>(
+    searchParams.get('search') || ''
+  )
+  const [rowsPerPage, setRowsPerPage] = React.useState<number>(
+    Number(searchParams.get('rowsPerPage')) || 10
+  )
+
+  // Update query string when state changes
+  React.useEffect(() => {
+    setSearchParams({
+      order,
+      orderBy,
+      status: statusFilter,
+      search,
+      rowsPerPage: String(rowsPerPage),
+    })
+  }, [order, orderBy, statusFilter, search, rowsPerPage, setSearchParams])
 
   const handleSort = (key: string) => {
     if (orderBy === key) {

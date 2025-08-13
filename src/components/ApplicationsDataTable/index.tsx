@@ -194,7 +194,6 @@ export const ApplicationsDataTable: React.FC<DataTableProps> = ({ columns, curre
                   )}
                 </TableCell>
               ))}
-              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -230,16 +229,15 @@ export const ApplicationsDataTable: React.FC<DataTableProps> = ({ columns, curre
                             {row.riskScore} ({getRiskLabel(row.riskScore)})
                           </Box>
                         </Typography>
+                      ) : col.key === 'actions' ? (
+                        <Button size="small" onClick={() => handleViewDetails(row)}>
+                          View Details
+                        </Button>
                       ) : (
                         <>{row[col.key]}</>
                       )}
                     </TableCell>
                   ))}
-                  <TableCell>
-                    <Button size="small" onClick={() => handleViewDetails(row)}>
-                      View Details
-                    </Button>
-                  </TableCell>
                 </TableRow>
               ))
             )}
