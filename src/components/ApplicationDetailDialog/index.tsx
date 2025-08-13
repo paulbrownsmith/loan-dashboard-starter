@@ -93,18 +93,29 @@ export const ApplicationDetailDialog: React.FC<ApplicationsDetailDialogProps> = 
         )}
         {tab === 1 && (
           <Box>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Annual Income:</Box> £{application.annualIncome?.toLocaleString('en-GB') ?? '—'}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Credit Score:</Box> {application.creditScore ?? '—'}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Debt-to-Income Ratio:</Box> {application.dtiRatio ?? '—'}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <Box component="span" sx={{ fontWeight: 700 }}>Employment Status:</Box> {application.employmentStatus ?? '—'}
-            </Typography>
+            {[
+              {
+                label: 'Annual Income',
+                value: application.annualIncome?.toLocaleString('en-GB') ? `£${application.annualIncome.toLocaleString('en-GB')}` : '—'
+              },
+              {
+                label: 'Credit Score',
+                value: application.creditScore ?? '—'
+              },
+              {
+                label: 'Debt-to-Income Ratio',
+                value: application.dtiRatio ?? '—'
+              },
+              {
+                label: 'Employment Status',
+                value: application.employmentStatus ?? '—'
+              }
+            ].map(field => (
+              <Typography variant="body2" gutterBottom key={field.label}>
+                <Box component="span" sx={{ fontWeight: 700 }}>{field.label}:</Box>{' '}
+                <Box component="span" sx={{ fontWeight: 400 }}>{field.value}</Box>
+              </Typography>
+            ))}
             <Typography variant="body2" gutterBottom>
               <Box component="span" sx={{ fontWeight: 700 }}>Risk Score:</Box>{' '}
               <Box component="span" sx={{ color: getRiskColor(riskScore), fontWeight: 600 }}>
